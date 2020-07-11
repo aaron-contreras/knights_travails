@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative './knight.rb'
-require_relative './move.rb'
+require 'pry'
 
 # Represents a chess 8x8 game board
 class GameBoard
@@ -32,5 +32,35 @@ class GameBoard
         end
       end
     end
+    binding.pry
+    adjacency_list
+  end
+
+  def knight_moves(start, target)
+    adjacency_list = build_adjacency_list
+    queue = []
+    visited = []
+    queue << start
+    loop do
+      current_square = queue.shift
+      visited << current_square
+      break if current_square == target
+
+      adjacency_list[current_square].each do |adjacent_square|
+        queue << adjacent_square
+      end
+    end
+
+    order_of_moves = [target]
+
+    loop do
+      move = visited.find do |square|
+        adjacency_list[square].include? order_of_moves.last
+      end
+      order_of_moves << move
+      break if order_of_moves.include? start
+    end
+
+    order_of_moves.reverse
   end
 end
